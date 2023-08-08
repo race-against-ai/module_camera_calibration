@@ -27,7 +27,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='module_template',
+    name='camera_calibration',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

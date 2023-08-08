@@ -9,15 +9,15 @@ def read(fname):
 
 
 setup(
-    name="raai_module_template",
+    name="camera_calibration",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     author="NGITl",
-    author_email="your@email.de",
-    description=("RAAI Module Template for managing different projects for RAAI"),
+    author_email="j.kurpeik@gmail.com",
+    description=(""),
     license="GPL 3.0",
     keywords="template",
-    url="https://github.com/vw-wob-it-edu-ngitl/raai_module_template",
+    url="https://github.com/vw-wob-it-edu-ngitl/raai_module_camera_calibration",
     packages=find_packages(),
     long_description=read("README.md"),
     install_requires=["pynng~=0.7.2"],
