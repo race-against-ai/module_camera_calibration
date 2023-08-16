@@ -54,3 +54,20 @@ class CameraStreamSource:
         frame = np.frombuffer(frame_bytes, np.uint8)
         frame = frame.reshape(self.frame_size)
         return frame
+
+
+class WebcamSource:
+    def __init__(self) -> None:
+        """
+        An image source which reads images from the camera.
+        """
+        self.__camera = cv2.VideoCapture(0)
+
+    def read_new_frame(self) -> np.ndarray:
+        """This function reads a frame and returns the image.
+
+        Returns:
+           np.ndarray: The frame to be returned.
+        """
+        ret, image = self.__camera.read()
+        return image

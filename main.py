@@ -1,5 +1,12 @@
 # Copyright (C) 2022 NG:ITL
-# import the main file in the backend folder
+from camera_calibration.image_sources import VideoFileSource, CameraStreamSource, WebcamSource
+from camera_calibration.camera_calibration import Calibrator
+
+# Constants
+address_rec_frame = "ipc:///tmp/RAAI/camera_frame.ipc"
 
 if __name__ == "__main__":
-    print("enter you projects main function :)")
+    # source = CameraStreamSource(FRAME_RECEIVE_LINK)
+    source = WebcamSource()
+    calibrator = Calibrator(source, (5, 5))
+    calibrator.main()
