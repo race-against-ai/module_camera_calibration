@@ -11,7 +11,6 @@ def read_config(config_file_path: str) -> dict:
 
 if __name__ == "__main__":
     config = read_config("camera_calibration_config.json")
-    # source = CameraStreamSource(config["pynng"]["subscribers"]["__sub_frame"]["address"])
-    source = WebcamSource()
+    source = CameraStreamSource(config["pynng"]["subscribers"]["__sub_frame"]["address"])
     calibrator = Calibrator(source, config["chessboard"]["chessboard_size"], config["chessboard"]["square_size"])
     calibrator.main()
