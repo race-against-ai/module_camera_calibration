@@ -1,0 +1,16 @@
+{
+  "pynng": {
+    "publishers": {
+    },
+    "subscribers": {
+      "__sub_frame": {
+        "address": "ipc:///tmp/RAAI/tracker_frame.ipc",
+        "topics": {}
+      }
+    }
+  },
+  "chessboard": {
+    "chessboard_size": [7,6],
+    "square_size": 25
+  }
+}
