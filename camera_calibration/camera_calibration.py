@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from threading import Timer
 from camera_calibration.image_sources import VideoFileSource, CameraStreamSource, WebcamSource
+from tests.mocks.virtual_camera import VirtualCamera
 
 
 def run_scheduled_task(p_time: int, scheduled_task, arg=None) -> None:
@@ -22,13 +23,14 @@ def run_scheduled_task(p_time: int, scheduled_task, arg=None) -> None:
 
 class Calibrator:
     def __init__(
-        self, image_source: VideoFileSource | CameraStreamSource | WebcamSource, p_chessboard_size: tuple, p_size: int
-    ):
+            self, image_source: VideoFileSource | CameraStreamSource | WebcamSource | VirtualCamera,
+            p_chessboard_size: tuple, p_size: int, p_test: bool = False ):
         self.__ret, self.__matrix, self.__distortion, self.__r_vecs, self.__t_vecs = "", "", "", "", ""
         self.__gray_color = None
         self.__image_source = image_source
         self.__search = True
         self.__count = 0
+        self.__test = p_test
 
         # Define the dimensions of chessboard
         self.__chessboard_size: tuple = p_chessboard_size
@@ -39,10 +41,10 @@ class Calibrator:
         self.__criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
         # Vector for 3D points
-        self.__three_d_points: list = []
+        self.__object_points: list = []
 
         # Vector for 2D points
-        self.__two_d_points: list = []
+        self.__image_points: list = []
 
         #  3D points real world coordinates
         self.__object_p_3d = np.zeros((self.__chessboard_size[0] * self.__chessboard_size[1], 3), np.float32)
@@ -52,7 +54,7 @@ class Calibrator:
                 self.__object_p_3d[j] = [self.__size * x, self.__size * y, 0]
                 j += 1
 
-        self.__object_p_3d[:, :2] = np.mgrid[0 : self.__chessboard_size[0], 0 : self.__chessboard_size[1]].T.reshape(
+        self.__object_p_3d[:, :2] = np.mgrid[0: self.__chessboard_size[0], 0: self.__chessboard_size[1]].T.reshape(
             -1, 2
         )
 
@@ -79,13 +81,14 @@ class Calibrator:
                 # them on the images of checkerboard
                 if ret:
                     self.__count += 1
-                    self.__three_d_points.append(self.__object_p_3d)
+                    print(self.__count)
+                    self.__object_points.append(self.__object_p_3d)
 
                     # Refining pixel coordinates
                     # for given 2d points.
                     corners2 = cv2.cornerSubPix(self.__gray_color, corners, (11, 11), (-1, -1), self.__criteria)
 
-                    self.__two_d_points.append(corners2)
+                    self.__image_points.append(corners2)
 
                     # Draw and display the corners
                     image = cv2.drawChessboardCorners(image_copy, self.__chessboard_size, corners2, ret)
@@ -104,16 +107,15 @@ class Calibrator:
                 1,
             )
             cv2.imshow("img", image)
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            if cv2.waitKey(1) & 0xFF == ord("q") or self.__test is True and self.__count == 10:
                 break
         print("creating matrix.csv...")
         cv2.destroyAllWindows()
 
     def create_matrix(self):
         self.__ret, self.__matrix, self.__distortion, self.__r_vecs, self.__t_vecs = cv2.calibrateCamera(
-            self.__three_d_points, self.__two_d_points, self.__gray_color.shape[::-1], None, None
+            self.__object_points, self.__image_points, self.__gray_color.shape[::-1], None, None
         )
-        print(self.__distortion)
 
     def safe_output(self, p_name: str, p_data):
         np.savetxt(p_name, p_data, delimiter=",")
@@ -122,8 +124,18 @@ class Calibrator:
     def set_search(self, p_value: bool):
         self.__search = p_value
 
+    def test(self):
+        mean_error = 0
+        for i in range(len(self.__object_points)):
+            img_points2, _ = cv2.projectPoints(self.__object_points[i], self.__r_vecs[i], self.__t_vecs[i],
+                                               self.__matrix, self.__distortion)
+            error = cv2.norm(self.__image_points[i], img_points2, cv2.NORM_L2) / len(img_points2)
+            mean_error += error
+        print("total error: {}".format(mean_error / len(self.__object_p_3d)))
+
     def main(self):
         self.find_chessboard()
         self.create_matrix()
         self.safe_output("matrix.csv", self.__matrix)
         self.safe_output("distortion.csv", self.__distortion)
+        self.test()
