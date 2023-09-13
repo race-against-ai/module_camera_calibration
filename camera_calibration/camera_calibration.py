@@ -93,8 +93,9 @@ class Calibrator:
                     # Draw and display the corners
                     image = cv2.drawChessboardCorners(image_copy, self.__chessboard_size, corners2, ret)
                     cv2.imshow("imgcheck", image_copy)
-                    self.__search = False
-                    run_scheduled_task(2, self.set_search, True)
+                    if not self.__test:
+                        self.__search = False
+                        run_scheduled_task(2, self.set_search, True)
             else:
                 cv2.putText(image, "waiting", (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255, 255), 1)
             cv2.putText(

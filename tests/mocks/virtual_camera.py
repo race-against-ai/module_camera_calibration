@@ -3,6 +3,9 @@ from time import sleep
 import numpy as np
 import cv2
 import glob
+from pathlib import Path
+
+CURRENT_DIR = Path(__file__).parent
 
 
 # Class
@@ -17,7 +20,7 @@ class VirtualCamera:
         self.frame_size: tuple[int, int, int] = (990, 1332, 3)
         self.__time_to_sleep = 1 / frame_rate
         print(self.__time_to_sleep)
-        self.__images = glob.glob("./pictures/*.jpg")
+        self.__images = glob.glob(str(CURRENT_DIR.parent / "pictures/*.jpg"))
 
         print(self.__images)
 
