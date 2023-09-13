@@ -31,15 +31,15 @@ class CameraCalibrationTest(unittest.TestCase):
         pass
 
     def test_Calibration_CreateMatrix_CorrectMatrixFile(self) -> None:
-
         config = read_config(self.__config_path)
         source = VirtualCamera(2)
         # source = WebcamSource()
-        calibrator = Calibrator(source, config["chessboard"]["chessboard_size"],
-                                config["chessboard"]["square_size"], True)
+        calibrator = Calibrator(
+            source, config["chessboard"]["chessboard_size"], config["chessboard"]["square_size"], True
+        )
         calibrator.main()
 
-        matrix = np.loadtxt(str(CURRENT_DIR / "matrix.csv"), delimiter=",")
+        matrix = np.loadtxt(str(CURRENT_DIR.parent / "matrix.csv"), delimiter=",")
         matrix_correct = np.loadtxt(str(CURRENT_DIR / "matrix_correct.csv"), delimiter=",")
         print("Matrix loaded, comparing...")
         print(matrix)

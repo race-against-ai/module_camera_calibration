@@ -23,8 +23,12 @@ def run_scheduled_task(p_time: int, scheduled_task, arg=None) -> None:
 
 class Calibrator:
     def __init__(
-            self, image_source: VideoFileSource | CameraStreamSource | WebcamSource | VirtualCamera,
-            p_chessboard_size: tuple, p_size: int, p_test: bool = False ):
+        self,
+        image_source: VideoFileSource | CameraStreamSource | WebcamSource | VirtualCamera,
+        p_chessboard_size: tuple,
+        p_size: int,
+        p_test: bool = False,
+    ):
         self.__ret, self.__matrix, self.__distortion, self.__r_vecs, self.__t_vecs = "", "", "", "", ""
         self.__gray_color = None
         self.__image_source = image_source
@@ -54,7 +58,7 @@ class Calibrator:
                 self.__object_p_3d[j] = [self.__size * x, self.__size * y, 0]
                 j += 1
 
-        self.__object_p_3d[:, :2] = np.mgrid[0: self.__chessboard_size[0], 0: self.__chessboard_size[1]].T.reshape(
+        self.__object_p_3d[:, :2] = np.mgrid[0 : self.__chessboard_size[0], 0 : self.__chessboard_size[1]].T.reshape(
             -1, 2
         )
 
@@ -92,8 +96,9 @@ class Calibrator:
 
                     # Draw and display the corners
                     image = cv2.drawChessboardCorners(image_copy, self.__chessboard_size, corners2, ret)
-                    cv2.imshow("imgcheck", image_copy)
+
                     if not self.__test:
+                        cv2.imshow("imgcheck", image_copy)
                         self.__search = False
                         run_scheduled_task(2, self.set_search, True)
             else:
@@ -107,7 +112,8 @@ class Calibrator:
                 (0, 0, 255, 255),
                 1,
             )
-            cv2.imshow("img", image)
+            if not self.__test:
+                cv2.imshow("img", image)
             if cv2.waitKey(1) & 0xFF == ord("q") or self.__test is True and self.__count == 10:
                 break
         print("creating matrix.csv...")
@@ -128,8 +134,9 @@ class Calibrator:
     def test(self):
         mean_error = 0
         for i in range(len(self.__object_points)):
-            img_points2, _ = cv2.projectPoints(self.__object_points[i], self.__r_vecs[i], self.__t_vecs[i],
-                                               self.__matrix, self.__distortion)
+            img_points2, _ = cv2.projectPoints(
+                self.__object_points[i], self.__r_vecs[i], self.__t_vecs[i], self.__matrix, self.__distortion
+            )
             error = cv2.norm(self.__image_points[i], img_points2, cv2.NORM_L2) / len(img_points2)
             mean_error += error
         print("total error: {}".format(mean_error / len(self.__object_p_3d)))
