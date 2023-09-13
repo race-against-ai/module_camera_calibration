@@ -45,6 +45,7 @@ class CameraCalibrationTest(unittest.TestCase):
         print("Matrix loaded, comparing...")
         print(matrix)
         print(matrix_correct)
+        print(matrix_correct2)
         if (matrix == matrix_correct).all() or (matrix == matrix_correct2).all():
             print("yes")
             self.assertTrue(True)
