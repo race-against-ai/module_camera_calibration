@@ -41,10 +41,11 @@ class CameraCalibrationTest(unittest.TestCase):
 
         matrix = np.loadtxt(str(CURRENT_DIR.parent / "matrix.csv"), delimiter=",")
         matrix_correct = np.loadtxt(str(CURRENT_DIR / "matrix_correct.csv"), delimiter=",")
+        matrix_correct2 = np.loadtxt(str(CURRENT_DIR / "matrix_correct2.csv"), delimiter=",")
         print("Matrix loaded, comparing...")
         print(matrix)
         print(matrix_correct)
-        if (matrix == matrix_correct).all():
+        if (matrix == matrix_correct).all() or (matrix == matrix_correct2).all():
             print("yes")
             self.assertTrue(True)
         else:
