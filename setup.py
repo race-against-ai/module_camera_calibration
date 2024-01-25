@@ -13,7 +13,7 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     author="NGITl",
-    author_email="j.kurpeik@gmail.com",
+    author_email="justin.kurpeik@volkswagen.de",
     description=(""),
     license="GPL 3.0",
     keywords="template",
