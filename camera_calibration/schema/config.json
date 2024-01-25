@@ -1,0 +1,37 @@
+{
+    "type": "object",
+    "properties": {
+        "pynng": {
+            "type": "object",
+            "properties": {
+                "publishers": {
+                    "type": "object",
+                    "properties": {
+                    }
+                },
+                "subscribers": {
+                    "type": "object",
+                    "properties": {
+                        "__sub_frame": {"$ref": "#/$defs/address_without_topic"}
+                    },
+                    "required": ["__sub_frame"]
+                }
+            },
+            "required": ["publishers", "subscribers"]
+        }
+    },
+    "required": ["pynng"],
+    "$defs": {
+        "address_without_topic": {
+            "type": "object",
+            "properties": {
+                "address": {"type": "string"},
+                "topics": {
+                    "type": "object",
+                    "properties": {}
+                }
+            },
+            "required": ["address"]
+        }
+    }
+}

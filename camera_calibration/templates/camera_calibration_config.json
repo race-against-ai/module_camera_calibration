@@ -10,7 +10,7 @@
     }
   },
   "chessboard": {
-    "chessboard_size": [6,9],
+    "chessboard_size": [7,6],
     "square_size": 25
   }
 }
