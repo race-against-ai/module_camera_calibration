@@ -17,7 +17,7 @@ def read_config(config_file_path: str) -> dict:
 if __name__ == "__main__":
     if not CONFIG_FILE_PATH.exists():
         with open(CONFIG_FILE_PATH, "w") as config_file, open(
-            FILE_DIR / "templates/time_tracking_config.json", "r"
+            FILE_DIR / "camera_calibration"/"templates/time_tracking_config.json", "r"
         ) as template_file:
             json.dump(json.load(template_file), config_file, indent=4)
 

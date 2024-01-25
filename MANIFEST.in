@@ -1,2 +1,2 @@
-include time_tracking/templates/*.json
-include time_tracking/schemas/*.json
+include camera_calibration/templates/*.json
+include camera_calibration/schemas/*.json
